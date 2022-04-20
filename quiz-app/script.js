@@ -40,6 +40,8 @@ const quizData=[
 const answersEl=document.querySelectorAll(".answer");
 const quiz=document.getElementById("quiz");
 const questionEl = document.getElementById("question");
+const nextquestionEl = document.getElementById("nextquestion");
+const prevquestionEl = document.getElementById("prevquestion");
 const a_text = document.getElementById("a_text");
 const b_text = document.getElementById("b_text");
 const c_text = document.getElementById("c_text");
@@ -51,6 +53,33 @@ let score = 0;
 
 loadQuiz();
 
+
+nextquestionEl.addEventListener("click",() => {
+
+    currentQuiz++;
+    if(currentQuiz<quizData.length){
+        loadQuiz();
+    }
+    else{
+        currentQuiz--;
+        alert("u cant go further. this is the last question.");
+    }
+    console.log(currentQuiz);
+})
+
+prevquestionEl.addEventListener("click",() => {
+
+    if(currentQuiz>0){
+        currentQuiz--;
+        loadQuiz();
+    }
+    else{
+        alert("u cant go back. this is the first question.");
+    }
+
+    console.log(currentQuiz);
+    
+})
 
 function getSelected(){
 
