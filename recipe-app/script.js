@@ -3,7 +3,9 @@ const favoriteContainer=document.getElementById('fav-meals');
 
 const searchTerm = document.getElementById("search-term");
 const searchBtn = document.getElementById("search");
-
+const mealPopup=document.getElementById("meal-popup");
+const popupCloseBtn=document.getElementById("close-popup");
+const mealInfoEl=document.getElementById("meal-info");
 
 getRandomMeal();
 fetchFavMeals();
@@ -58,6 +60,7 @@ function addMeal(mealData,random=false) {
     `;
 
     const btn=meal.querySelector('.meal-body .fav-btn');
+
     btn.addEventListener('click', () => {
         if(btn.classList.contains('active')){
             removeMealLS(mealData.idMeal)
@@ -71,7 +74,11 @@ function addMeal(mealData,random=false) {
     
     });
 
-    meals.appendChild(meal);
+    meal.addEventListener('click', () => {
+        showMealInfo(mealData);
+    });
+
+    mealsEl.appendChild(meal);
        
 }
 
@@ -115,6 +122,8 @@ function addMealFav(mealData) {
 
     const favMeal= document.createElement('li');
 
+    
+
     favMeal.innerHTML=` 
     <img 
         src="${mealData.strMealThumb}"
@@ -131,8 +140,43 @@ function addMealFav(mealData) {
         fetchFavMeals();
     });
 
+    favMeal.addEventListener('click', () => {
+        showMealInfo(mealData);
+    });
+
     favoriteContainer.appendChild(favMeal);
        
+}
+
+function showMealInfo(mealData){
+
+    mealInfoEl.innerHTML="";
+
+    const mealEl= document.createElement('div');
+
+    const ingredients=[];
+
+    for(let i=1;i<20;i++){
+        if(mealData['strIngredient'+i]){
+            ingredients.push(`${mealData['strIngredient'+i]} - ${mealData['strMeasure'+i]} `)
+        } else{
+            break;
+        }
+    }
+
+
+    mealEl.innerHTML=`
+            <h1>${mealData.strMeal}</h1>
+            <img src="${mealData.strMealThumb}" alt="${mealData.strMeal}">
+            <p>${mealData.strInstructions}</p>
+            <ul>
+                ${ingredients.map((ing) => `<li> ${ing}</li>`).join("")}
+            </ul>
+            `; 
+
+    mealInfoEl.appendChild(mealEl);
+
+    mealPopup.classList.remove("hidden");
 }
 
 searchBtn.addEventListener('click', async ()=>{
@@ -147,4 +191,8 @@ searchBtn.addEventListener('click', async ()=>{
         })
     }
 
+});
+
+popupCloseBtn.addEventListener("click", ()=>{
+    mealPopup.classList.add("hidden");
 });
